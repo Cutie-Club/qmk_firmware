@@ -2281,6 +2281,7 @@ static void gpt_backlight_timer_task(GPTDriver *gptp)
             break;
         case 11:
             custom_effect( initialize );
+            break;
         default:
             backlight_effect_all_off();
             break;

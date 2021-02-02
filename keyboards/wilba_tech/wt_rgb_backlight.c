@@ -103,7 +103,7 @@ LED_TYPE g_ws2812_leds[WS2812_LED_TOTAL];
 #endif
 #endif
 
-#define BACKLIGHT_EFFECT_MAX 10
+#define BACKLIGHT_EFFECT_MAX 11
 
 backlight_config g_config = {
     .use_split_backspace = RGB_BACKLIGHT_USE_SPLIT_BACKSPACE,
@@ -2162,6 +2162,32 @@ void backlight_effect_indicators(void)
     }
 }
 
+void custom_effect(bool initialize)
+{
+    if(initialize){
+        backlight_set_color_all( 0, 0, 0 );
+    }
+
+    uint8_t index;
+    map_row_column_to_led( 0, 1, &index );
+    backlight_set_color( index, 255U, 0, 0 );
+
+    map_row_column_to_led( 0, 2, &index );
+    backlight_set_color( index, 255U, 165U, 0 );
+
+    map_row_column_to_led( 0, 3, &index );
+    backlight_set_color( index, 255U, 255U, 0 );
+
+    map_row_column_to_led( 0, 4, &index );
+    backlight_set_color( index, 0, 255U, 0 );
+
+    map_row_column_to_led( 0, 5, &index );
+    backlight_set_color( index, 0, 0, 255U );
+
+    map_row_column_to_led( 0, 6, &index );
+    backlight_set_color( index, 128U, 0, 128U );
+}
+
 #if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NEBULA68) && !defined(RGB_BACKLIGHT_NEBULA12) && !defined(RGB_BACKLIGHT_NK87) && !defined(RGB_BACKLIGHT_KW_MEGA)
 ISR(TIMER3_COMPA_vect)
 #else //STM32 interrupt
@@ -2253,6 +2279,8 @@ static void gpt_backlight_timer_task(GPTDriver *gptp)
         case 10:
             backlight_effect_cycle_radial2();
             break;
+        case 11:
+            custom_effect( initialize );
         default:
             backlight_effect_all_off();
             break;

@@ -2162,30 +2162,57 @@ void backlight_effect_indicators(void)
     }
 }
 
+#define degreesToByte(num) ((num*255)/360)
+const HSV colorArray[] = {
+    (HSV) { // red
+        .h = 0,
+        .s = 255,
+        .v = 255,
+    },
+    (HSV) { // orange
+        .h = degreesToByte(39),
+        .s = 255,
+        .v = 255,
+    },
+    (HSV) { // yellow
+        .h = degreesToByte(60),
+        .s = 255,
+        .v = 255,
+    },
+    (HSV) { // green
+        .h = degreesToByte(120),
+        .s = 255,
+        .v = 255,
+    },
+    (HSV) { // blue
+        .h = degreesToByte(240),
+        .s = 255,
+        .v = 255,
+    },
+    (HSV) { // purple
+        .h = degreesToByte(300),
+        .s = 255,
+        .v = 128,
+    },
+};
+
 void custom_effect(bool initialize)
 {
     if(initialize){
         backlight_set_color_all( 0, 0, 0 );
     }
 
-    uint8_t index;
-    map_row_column_to_led( 0, 1, &index );
-    backlight_set_color( index, 255U, 0, 0 );
+    for (int i = 0; i < 6; i++){
+        uint8_t index;
+        map_row_column_to_led( 0, i+1, &index );
+        RGB rgb = hsv_to_rgb((HSV) {
+            .h = colorArray[i].h,
+            .s = colorArray[i].s,
+            .v = (colorArray[i].v * g_config.brightness) / 255
+        });
 
-    map_row_column_to_led( 0, 2, &index );
-    backlight_set_color( index, 255U, 165U, 0 );
-
-    map_row_column_to_led( 0, 3, &index );
-    backlight_set_color( index, 255U, 255U, 0 );
-
-    map_row_column_to_led( 0, 4, &index );
-    backlight_set_color( index, 0, 255U, 0 );
-
-    map_row_column_to_led( 0, 5, &index );
-    backlight_set_color( index, 0, 0, 255U );
-
-    map_row_column_to_led( 0, 6, &index );
-    backlight_set_color( index, 128U, 0, 128U );
+        backlight_set_color( index, rgb.r, rgb.g, rgb.b );
+    }
 }
 
 #if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NEBULA68) && !defined(RGB_BACKLIGHT_NEBULA12) && !defined(RGB_BACKLIGHT_NK87) && !defined(RGB_BACKLIGHT_KW_MEGA)

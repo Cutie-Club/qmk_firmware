@@ -59,8 +59,8 @@ void matrix_init_user(void) {
 }
 
 void matrix_scan_user(void) {
-  if(is_adobe_pause_active) {
-    if (timer_elapsed(alt_tab_timer) > ADOBE_DELAY_MS){
+  if(adobe_pause_timer_running) {
+    if (timer_elapsed(adobe_pause_timer) > ADOBE_DELAY_MS){
       register_code(KC_LALT);
       tap_code(KC_1);
       unregister_code(KC_LALT);
